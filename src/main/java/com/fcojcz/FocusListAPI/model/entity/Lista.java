@@ -2,7 +2,6 @@ package com.fcojcz.FocusListAPI.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Builder
-@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

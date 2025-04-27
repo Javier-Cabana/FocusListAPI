@@ -3,14 +3,12 @@ package com.fcojcz.FocusListAPI.model.entity;
 import com.fcojcz.FocusListAPI.model.enums.PrioridadEtiqueta;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Builder
-@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
