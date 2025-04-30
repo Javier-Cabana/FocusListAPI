@@ -13,7 +13,7 @@ import java.util.UUID;
 @Setter
 @EqualsAndHashCode
 @Entity
-@Table(name = "tarea")
+@Table(name = "tareas")
 public class Tarea {
 
     @Id
