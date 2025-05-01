@@ -1,5 +1,10 @@
 package com.fcojcz.FocusListAPI.service;
 
+import com.fcojcz.FocusListAPI.model.dto.lista.ListaResumenDTO;
+import com.fcojcz.FocusListAPI.model.dto.usuario.UsuarioCreateDTO;
+import com.fcojcz.FocusListAPI.model.dto.usuario.UsuarioDeleteDTO;
+import com.fcojcz.FocusListAPI.model.dto.usuario.UsuarioResponseDTO;
+import com.fcojcz.FocusListAPI.model.dto.usuario.UsuarioUpdateDTO;
 import com.fcojcz.FocusListAPI.model.entity.Usuario;
 import com.fcojcz.FocusListAPI.repository.UsuarioRepository;
 import org.slf4j.Logger;
@@ -9,6 +14,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UsuarioService {
@@ -106,17 +115,92 @@ public class UsuarioService {
         }
     }
 
-//    public Usuario save(Usuario usuario) {
-//
-//    }
-//
-//    public Usuario update(Usuario usuario) {
-//
-//    public boolean delete(Usuario usuario) {
-//
-//    }
-//
-//    public UserResponseDTO mapToUserResponseDTO(Usuario usuario) {
-//
-//    }
+    /**
+     * Metodo para guardar un usuario
+     * @param usuarioCreateDTO DTO del usuario que queremos guardar en la base de datos
+     * @return Usuario guardado
+     * @throws RuntimeException Si ocurre un error durante el guardado.
+     */
+    public Usuario save(UsuarioCreateDTO usuarioCreateDTO) {
+        try {
+            logger.info("Creando el usuario a partir del DTO: {}", usuarioCreateDTO);
+            Usuario usuario = Usuario.builder()
+                    .username(usuarioCreateDTO.getUsername())
+                    .email(usuarioCreateDTO.getEmail())
+                    .password(usuarioCreateDTO.getPassword())
+                    .build();
+            logger.info("Guardando el usuario con username: {}", usuario);
+            return usuarioRepository.save(usuario);
+        } catch (Exception e) {
+            logger.error("Error al guardar el usuario: {}", e.getMessage());
+            throw new RuntimeException("Error al guardar el usuario\n" + e.getMessage());
+        }
+    }
+
+    /**
+     * Metodo para actualizar un usuario
+     * @param usuarioUpdateDTO DTO del usuario que queremos actualizar en la base de datos
+     * @return Usuario actualizado
+     * @throws RuntimeException Si ocurre un error durante la actualización.
+     */
+    public Usuario update(UsuarioUpdateDTO usuarioUpdateDTO) {
+        try {
+            logger.info("Buscando el usuario a actualizar con ID: '{}'", usuarioUpdateDTO.getId());
+            Usuario usuarioToUpdate = usuarioRepository.findById(usuarioUpdateDTO.getId()).get();
+
+            if (usuarioToUpdate != null) {
+                usuarioToUpdate.setUsername(usuarioUpdateDTO.getUsername());
+                usuarioToUpdate.setEmail(usuarioUpdateDTO.getEmail());
+                usuarioToUpdate.setPassword(usuarioUpdateDTO.getPassword());
+            }
+
+            logger.info("Actualizando el usuario: {}", usuarioToUpdate);
+            return usuarioRepository.save(usuarioToUpdate);
+        } catch (Exception e) {
+            logger.error("Error al actualizar el usuario: {}", e.getMessage());
+            throw new RuntimeException("Error al actualizar el usuario\n" + e.getMessage());
+        }
+    }
+
+    public boolean delete(UsuarioDeleteDTO usuarioDeleteDTO) {
+        try {
+            Optional<Usuario> usuarioOptional = usuarioRepository.findById(usuarioDeleteDTO.getId());
+            if (usuarioOptional.isPresent()) {
+                logger.info("Borrando el usuario con id: {}", usuarioDeleteDTO.getId());
+                usuarioRepository.deleteById(usuarioDeleteDTO.getId());
+                return true;
+            }
+            logger.error("No se ha encontrado el usuario con id: {}", usuarioDeleteDTO.getId());
+            return false;
+        } catch (Exception e) {
+            logger.error("Error al borrar el usuario con id: {}", usuarioDeleteDTO.getId(), e.getMessage());
+            throw new RuntimeException("Error al borrar el usuario.\n" + e.getMessage());
+        }
+    }
+
+    /**
+     * Metodo para mapear un usuario a un UsuarioResponseDTO
+     * @param usuario Objeto a mapear
+     * @return Devuelve el UsuarioResponseDTO mapeado
+     * @throws RuntimeException Si ocurre un error durante el mapeo.
+     */
+    public UsuarioResponseDTO mapToUserResponseDTO(Usuario usuario) {
+        try {
+            logger.info("Mapeando el usuario con id: {}", usuario.getId());
+
+            Set<ListaResumenDTO> listas = new HashSet<>();
+            //TODO Mapear las listas cuando tengamos el repository y servicio de listas
+
+            return UsuarioResponseDTO.builder()
+                    .id(usuario.getId())
+                    .username(usuario.getUsername())
+                    .email(usuario.getEmail())
+                    .password(usuario.getPassword())
+                    .listas(listas)
+                    .build();
+        } catch (Exception e) {
+            logger.error("Error al mapear el usuario\n" + e.getMessage());
+            throw new RuntimeException("Error al mapear el usuario\n" + e.getMessage());
+        }
+    }
 }

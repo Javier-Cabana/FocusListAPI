@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -29,5 +29,5 @@ public class UsuarioResponseDTO {
     @NotBlank(message = "La contraseña no puede estar vacía")
     private String password;
 
-    private List<ListaResumenDTO> listas;
+    private Set<ListaResumenDTO> listas;
 }
