@@ -1,6 +1,5 @@
-package com.fcojcz.FocusListAPI.model.dto.usuario;
+package com.fcojcz.FocusListAPI.model.dto.lista;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,8 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UsuarioDeleteDTO {
-
-    @NotNull(message = "El id es obligatorio")
+public class ListaResumenDTO {
     private UUID id;
+    private String nombre;
 }
