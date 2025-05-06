@@ -14,28 +14,28 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @GetMapping("/all")
-    public ResponseEntity<Page<UsuarioResponseDTO>> getAllUsers() {
-
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDTO> getUserById() {
-
-    }
-
-    @PostMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDTO> createUsuario() {
-
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDTO> updateUsuario() {
-
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDTO> deleteUsuario() {
-
-    }
+//    @GetMapping("/all")
+//    public ResponseEntity<Page<UsuarioResponseDTO>> getAllUsers() {
+//
+//    }
+//
+//    @GetMapping("/{id}")
+//    public ResponseEntity<UsuarioResponseDTO> getUserById() {
+//
+//    }
+//
+//    @PostMapping("/{id}")
+//    public ResponseEntity<UsuarioResponseDTO> createUsuario() {
+//
+//    }
+//
+//    @PutMapping("/{id}")
+//    public ResponseEntity<UsuarioResponseDTO> updateUsuario() {
+//
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<UsuarioResponseDTO> deleteUsuario() {
+//
+//    }
 }

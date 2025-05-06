@@ -119,10 +119,14 @@ public class UsuarioService {
      * Metodo para guardar un usuario
      * @param usuarioCreateDTO DTO del usuario que queremos guardar en la base de datos
      * @return Usuario guardado
-     * @throws RuntimeException Si ocurre un error durante el guardado.
+     * @throws RuntimeException Si el email ya esta en uso u ocurre un error durante el guardado.
      */
     public Usuario save(UsuarioCreateDTO usuarioCreateDTO) {
         try {
+            if (existsByEmail(usuarioCreateDTO.getEmail())) {
+                logger.error("Ya existe un usuario con el email: {}", usuarioCreateDTO.getEmail());
+                throw new RuntimeException("Ya existe un usuario con el email: " + usuarioCreateDTO.getEmail());
+            }
             logger.info("Creando el usuario a partir del DTO: {}", usuarioCreateDTO);
             Usuario usuario = Usuario.builder()
                     .username(usuarioCreateDTO.getUsername())
