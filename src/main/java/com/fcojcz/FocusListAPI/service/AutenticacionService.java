@@ -43,10 +43,10 @@ public class AutenticacionService {
             }
 
             Authentication auth = authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    userOrEmail,
-                    loginRequest.getPassword()
-                )
+                    new UsernamePasswordAuthenticationToken(
+                            userOrEmail,
+                            loginRequest.getPassword()
+                    )
             );
             logger.info("Generando token");
             String token = jwt.generateJwtToken(auth);
@@ -56,4 +56,13 @@ public class AutenticacionService {
             throw new RuntimeException("Error al autenticar el usuario: " + e.getMessage());
         }
     }
+
+//TODO
+//    public void forgotPassword(ForgotPasswordDTO dto) {
+//
+//    }
+//
+//    public void resetPassword(PasswordResetDTO dto) {
+//
+//    }
 }
