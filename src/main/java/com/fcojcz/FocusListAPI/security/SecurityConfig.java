@@ -63,7 +63,7 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/autenticacion/**").permitAll() //Registro y login
+                        .requestMatchers("/autenticacion/registro", "/autenticacion/login").permitAll() //Registro y login
                         .anyRequest().authenticated()
                 )
 
