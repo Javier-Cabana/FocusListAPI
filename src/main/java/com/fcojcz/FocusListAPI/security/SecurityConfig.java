@@ -51,7 +51,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // 4. SecurityFilterChain con la nueva DSL de lambdas
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
