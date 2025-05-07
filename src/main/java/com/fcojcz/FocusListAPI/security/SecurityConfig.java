@@ -17,9 +17,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
-import java.util.Arrays;
-
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
@@ -54,7 +51,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // 4. SecurityFilterChain con la nueva DSL de lambdas
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
