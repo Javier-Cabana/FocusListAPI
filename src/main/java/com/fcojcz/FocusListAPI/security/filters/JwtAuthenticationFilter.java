@@ -66,4 +66,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             logger.error("Error en JwtAuthenticationFilter: {}", e.getMessage());
         }
     }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.equals("/autenticacion/registro") || path.equals("/autenticacion/login");
+    }
 }

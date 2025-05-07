@@ -49,16 +49,6 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioResponseDTO);
     }
 
-    @PostMapping()
-    public ResponseEntity<UsuarioResponseDTO> createUsuario(@RequestBody UsuarioCreateDTO dto) {
-        Usuario usuario = usuarioService.save(dto);
-
-        if (usuario == null) return ResponseEntity.badRequest().build();
-
-        UsuarioResponseDTO response = usuarioService.mapToUserResponseDTO(usuario);
-        return ResponseEntity.ok(response);
-    }
-
 //    @PutMapping("/{id}")
 //    public ResponseEntity<UsuarioResponseDTO> updateUsuario() {
 //
