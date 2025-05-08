@@ -5,6 +5,7 @@ import com.fcojcz.FocusListAPI.model.dto.usuario.UsuarioCreateDTO;
 import com.fcojcz.FocusListAPI.model.dto.usuario.UsuarioDeleteDTO;
 import com.fcojcz.FocusListAPI.model.dto.usuario.UsuarioResponseDTO;
 import com.fcojcz.FocusListAPI.model.dto.usuario.UsuarioUpdateDTO;
+import com.fcojcz.FocusListAPI.model.entity.PasswordResetToken;
 import com.fcojcz.FocusListAPI.model.entity.Usuario;
 import com.fcojcz.FocusListAPI.repository.UsuarioRepository;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -24,6 +26,9 @@ public class UsuarioService {
 
     @Autowired
     UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private static final Logger logger = LoggerFactory.getLogger(UsuarioService.class);
 
@@ -131,7 +136,7 @@ public class UsuarioService {
             Usuario usuario = Usuario.builder()
                     .username(usuarioCreateDTO.getUsername())
                     .email(usuarioCreateDTO.getEmail())
-                    .password(usuarioCreateDTO.getPassword())
+                    .password(passwordEncoder.encode(usuarioCreateDTO.getPassword()))
                     .build();
             logger.info("Guardando el usuario con username: {}", usuario);
             return usuarioRepository.save(usuario);
