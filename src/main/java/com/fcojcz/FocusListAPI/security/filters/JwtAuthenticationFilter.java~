@@ -72,12 +72,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
 
-        return new AntPathMatcher().match("/autenticacion/login", path)
-                || new AntPathMatcher().match("/autentiacion/registro", path)
+        return new AntPathMatcher().match("/autenticacion/**", path)
                 || new AntPathMatcher().match("/swagger-ui/**", path)
                 || new AntPathMatcher().match("/v3/api-docs/**", path)
                 || new AntPathMatcher().match("/swagger-resources/**", path)
-                || new AntPathMatcher().match("/webjars/**", path);
+                || new AntPathMatcher().match("/webjars/**", path)
+                || new AntPathMatcher().match("/autentiacion/registro", path)
+                || new AntPathMatcher().match("/autentiacion/login", path);
 
 //        return path.equals("/autenticacion/registro")
 //                || path.equals("/autenticacion/login");
