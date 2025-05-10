@@ -1,6 +1,7 @@
 package com.fcojcz.FocusListAPI.security;
 
 import com.fcojcz.FocusListAPI.security.filters.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -54,21 +55,29 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
+            .csrf(AbstractHttpConfigurer::disable)
 
-                .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
+            .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
 
-                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                .authenticationProvider(authenticationProvider())
+            .authenticationProvider(authenticationProvider())
 
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/autenticacion/registro", "/autenticacion/login").permitAll() //Registro y login
-                        .anyRequest().authenticated()
-                )
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(
+                            "/autenticacion/registro",
+                            "/autenticacion/login",
+                            "/swagger-ui.html",
+                            "/swagger-ui/**",
+                            "/v3/api-docs",
+                            "/v3/api-docs/**",
+                            "/swagger-resources/**",
+                            "/webjars/**"
+                    ).permitAll() //Registro,login y swagger
+                    .anyRequest().authenticated()
+            )
 
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

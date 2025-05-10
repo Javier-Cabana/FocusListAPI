@@ -1,7 +1,6 @@
 package com.fcojcz.FocusListAPI.security.filters;
 
 import com.fcojcz.FocusListAPI.security.jwt.JwtUtils;
-import com.fcojcz.FocusListAPI.service.AutenticacionService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -70,6 +70,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        return path.equals("/autenticacion/registro") || path.equals("/autenticacion/login");
+
+        return new AntPathMatcher().match("/autenticacion/login", path)
+                || new AntPathMatcher().match("/autentiacion/registro", path)
+                || new AntPathMatcher().match("/swagger-ui/**", path)
+                || new AntPathMatcher().match("/v3/api-docs/**", path)
+                || new AntPathMatcher().match("/swagger-resources/**", path)
+                || new AntPathMatcher().match("/webjars/**", path);
     }
 }
