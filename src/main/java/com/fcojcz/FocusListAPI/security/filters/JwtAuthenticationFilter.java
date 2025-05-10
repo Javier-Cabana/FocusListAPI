@@ -1,7 +1,6 @@
 package com.fcojcz.FocusListAPI.security.filters;
 
 import com.fcojcz.FocusListAPI.security.jwt.JwtUtils;
-import com.fcojcz.FocusListAPI.service.AutenticacionService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -78,8 +77,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 || new AntPathMatcher().match("/v3/api-docs/**", path)
                 || new AntPathMatcher().match("/swagger-resources/**", path)
                 || new AntPathMatcher().match("/webjars/**", path);
-
-//        return path.equals("/autenticacion/registro")
-//                || path.equals("/autenticacion/login");
     }
 }

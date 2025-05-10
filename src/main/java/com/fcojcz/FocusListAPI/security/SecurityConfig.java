@@ -22,9 +22,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Value("${spring.profiles.active:}")
-    private String activeProfile;
-
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationEntryPoint authEntryPoint;
     private final UserDetailsService userDetailsService;
@@ -81,13 +78,6 @@ public class SecurityConfig {
             )
 
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-//
-//            .headers(headers -> headers
-//                .contentSecurityPolicy(csp -> csp
-//                        .policyDirectives("script-src 'self' 'unsafe-eval';")
-//                )
-//            );
-
         return http.build();
     }
 }

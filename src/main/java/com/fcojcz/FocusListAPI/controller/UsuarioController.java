@@ -1,6 +1,5 @@
 package com.fcojcz.FocusListAPI.controller;
 
-import com.fcojcz.FocusListAPI.model.dto.usuario.UsuarioCreateDTO;
 import com.fcojcz.FocusListAPI.model.dto.usuario.UsuarioDeleteDTO;
 import com.fcojcz.FocusListAPI.model.dto.usuario.UsuarioResponseDTO;
 import com.fcojcz.FocusListAPI.model.entity.Usuario;
@@ -10,10 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
