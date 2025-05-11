@@ -1,11 +1,13 @@
 package com.fcojcz.FocusListAPI.repository;
 
 import com.fcojcz.FocusListAPI.model.entity.Lista;
-import com.fcojcz.FocusListAPI.model.entity.Usuario;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,31 +16,23 @@ public interface ListaRepository extends JpaRepository<Lista, UUID> {
 
     /**
      * Devuelve todas las listas creadas por un usuario específico.
-     * @param usuario Usuario propietario de las listas.
-     * @return Lista de listas del usuario.
+     * @param username Usuario propietario de las listas.
+     * @param pageable Información de paginación
+     * @return Página con todas las listas del usuario.
      */
-    List<Lista> findByUsuario(Usuario usuario);
+    Page<Lista> findAllByUsuario(Pageable pageable, String username);
 
     /**
-     * Busca una lista específica por su ID y el usuario propietario.
-     * @param id UUID de la lista.
-     * @param usuario Usuario propietario.
-     * @return Lista si existe y pertenece al usuario, o vacío si no.
+     * Encontrar una lista por su nombre
+     * @param nombre Nombre de la lista
+     * @return Devuelve la lista si la encuentra, sino devuelve vacío.
      */
-    Optional<Lista> findByIdAndUsuario(UUID id, Usuario usuario);
+    Optional<Lista> findByName(String nombre);
 
     /**
-     * Verifica si una lista con un nombre concreto existe para un usuario.
-     * @param nombre Nombre de la lista.
-     * @param usuario Usuario propietario.
-     * @return true si existe, false en caso contrario.
+     * Comprueba si existe una lista con ese nombre
+     * @param nombre Nombre de la lista
+     * @return Devuelve true si la lista existe, sino devuelve false
      */
-    boolean existsByNombreAndUsuario(String nombre, Usuario usuario);
-
-    /**
-     * Elimina una lista por su ID y el usuario propietario (opcional para seguridad adicional).
-     * @param id UUID de la lista.
-     * @param usuario Usuario propietario.
-     */
-    void deleteByIdAndUsuario(UUID id, Usuario usuario);
+    boolean existsByNombre(String nombre);
 }
