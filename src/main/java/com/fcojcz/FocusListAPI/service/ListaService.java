@@ -4,10 +4,10 @@ import com.fcojcz.FocusListAPI.model.dto.lista.ListaCreateDTO;
 import com.fcojcz.FocusListAPI.model.dto.lista.ListaDeleteDTO;
 import com.fcojcz.FocusListAPI.model.dto.lista.ListaResponseDTO;
 import com.fcojcz.FocusListAPI.model.dto.lista.ListaUpdateDTO;
-import com.fcojcz.FocusListAPI.model.dto.tarea.TareaResponseDTO;
 import com.fcojcz.FocusListAPI.model.entity.Lista;
 import com.fcojcz.FocusListAPI.model.entity.Tarea;
 import com.fcojcz.FocusListAPI.repository.ListaRepository;
+import com.fcojcz.FocusListAPI.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,12 +20,15 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class ListaService {
 
     @Autowired
     ListaRepository listaRepository;
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(ListaService.class);
 
@@ -40,6 +43,7 @@ public class ListaService {
             Lista lista = Lista.builder()
                     .nombre(listaCreateDTO.getNombre())
                     .fechaCreacion(fechaCreacion)
+                    .usuario(usuarioRepository.findById(listaCreateDTO.getIdUsuario()).get())
                     .build();
             logger.info("Guardando la lista: {}", listaCreateDTO.getNombre());
             return listaRepository.save(lista);
@@ -106,7 +110,7 @@ public class ListaService {
 
     public Lista loadByName(String nombre) {
         try {
-            Lista result = listaRepository.findByName(nombre).orElse(null);
+            Lista result = listaRepository.findByNombre(nombre).orElse(null);
 
             if (result == null) {
                 logger.error("No se ha encontrado la lista con el nombre: {}", nombre);
@@ -135,8 +139,12 @@ public class ListaService {
         try {
             logger.info("Mapeando la lista con ID: {}", lista.getId());
 
-            Set<TareaResponseDTO> tareas = new HashSet<>();
-            // TODO: Mapear las tareas cuando tengamos el repository y servicio de tareas
+            Set<UUID> tareas = new HashSet<>();
+            if (lista.getTareas() != null) {
+                for (Tarea tarea : lista.getTareas()) {
+                    tareas.add(tarea.getId());
+                }
+            }
 
             return ListaResponseDTO.builder()
                     .id(lista.getId())

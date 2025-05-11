@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,7 +26,7 @@ public interface ListaRepository extends JpaRepository<Lista, UUID> {
      * @param nombre Nombre de la lista
      * @return Devuelve la lista si la encuentra, sino devuelve vacío.
      */
-    Optional<Lista> findByName(String nombre);
+    Optional<Lista> findByNombre(String nombre);
 
     /**
      * Comprueba si existe una lista con ese nombre
