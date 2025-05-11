@@ -5,6 +5,7 @@ import com.fcojcz.FocusListAPI.model.dto.usuario.UsuarioCreateDTO;
 import com.fcojcz.FocusListAPI.model.dto.usuario.UsuarioDeleteDTO;
 import com.fcojcz.FocusListAPI.model.dto.usuario.UsuarioResponseDTO;
 import com.fcojcz.FocusListAPI.model.dto.usuario.UsuarioUpdateDTO;
+import com.fcojcz.FocusListAPI.model.entity.Lista;
 import com.fcojcz.FocusListAPI.model.entity.PasswordResetToken;
 import com.fcojcz.FocusListAPI.model.entity.Usuario;
 import com.fcojcz.FocusListAPI.repository.UsuarioRepository;
@@ -198,7 +199,15 @@ public class UsuarioService {
             logger.info("Mapeando el usuario con id: {}", usuario.getId());
 
             Set<ListaResumenDTO> listas = new HashSet<>();
-            //TODO Mapear las listas cuando tengamos el repository y servicio de listas
+            if (usuario.getListas() != null) {
+                for (Lista lista : usuario.getListas()) {
+                    listas.add(
+                        ListaResumenDTO.builder()
+                                .id(lista.getId())
+                                .nombre(lista.getNombre())
+                                .build());
+                }
+            }
 
             return UsuarioResponseDTO.builder()
                     .id(usuario.getId())
