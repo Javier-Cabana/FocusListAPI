@@ -160,7 +160,7 @@ public class UsuarioService {
             if (usuarioToUpdate != null) {
                 usuarioToUpdate.setUsername(usuarioUpdateDTO.getUsername());
                 usuarioToUpdate.setEmail(usuarioUpdateDTO.getEmail());
-                usuarioToUpdate.setPassword(usuarioUpdateDTO.getPassword());
+                usuarioToUpdate.setPassword(passwordEncoder.encode(usuarioUpdateDTO.getPassword()));
             }
 
             logger.info("Actualizando el usuario: {}", usuarioToUpdate);
