@@ -25,15 +25,7 @@ public class UsuarioController {
 
         if (result == null) return ResponseEntity.badRequest().build();
 
-        Page<UsuarioResponseDTO> response = result.map(usuario -> {
-            return UsuarioResponseDTO.builder()
-                    .id(usuario.getId())
-                    .username(usuario.getUsername())
-                    .email(usuario.getEmail())
-                    .password(usuario.getPassword())
-                    .build();
-        });
-
+        Page<UsuarioResponseDTO> response = result.map(usuario -> usuarioService.mapToUserResponseDTO(usuario));
         return ResponseEntity.ok(response);
     }
 
