@@ -21,5 +21,5 @@ public class ListaResponseDTO {
 
     private UUID idUsuario;
 
-    private Set<TareaResponseDTO> tareas;
+    private Set<UUID> tareas;
 }
