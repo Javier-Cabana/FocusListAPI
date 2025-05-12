@@ -6,6 +6,7 @@ import com.fcojcz.FocusListAPI.model.dto.lista.ListaResponseDTO;
 import com.fcojcz.FocusListAPI.model.dto.lista.ListaUpdateDTO;
 import com.fcojcz.FocusListAPI.model.entity.Lista;
 import com.fcojcz.FocusListAPI.model.entity.Tarea;
+import com.fcojcz.FocusListAPI.model.entity.Usuario;
 import com.fcojcz.FocusListAPI.repository.ListaRepository;
 import com.fcojcz.FocusListAPI.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -71,12 +73,14 @@ public class ListaService {
         }
     }
 
+    @Transactional
     public boolean delete(ListaDeleteDTO listaDeleteDTO) {
         try {
-            Optional<Lista> listaOptional = listaRepository.findById(listaDeleteDTO.getId());
-            if (listaOptional.isPresent()) {
+            Lista lista = listaRepository.findById(listaDeleteDTO.getId()).orElse(null);
+            if (lista != null) {
                 logger.info("Borrando la lista con ID: {}", listaDeleteDTO.getId());
-                listaRepository.deleteById(listaDeleteDTO.getId());
+                Usuario usuario = lista.getUsuario();
+                usuario.getListas().remove(lista);
                 return true;
             }
             logger.error("No se ha encontrado la lista con ID: {}", listaDeleteDTO.getId());
@@ -91,6 +95,13 @@ public class ListaService {
         try {
             logger.info("Buscando todas las listas del usuario");
 
+            Optional<Usuario> result = usuarioRepository.findByUsername(username);
+
+            if (result.isEmpty()) {
+                logger.error("No se ha encontrado el usuario con username: {}", username);
+                throw new RuntimeException("No se ha encontrado el usuario con username: " + username);
+            }
+
             return listaRepository.findAllByUsuario(
                     PageRequest.of(
                             pageable.getPageNumber() > 0
@@ -100,7 +111,7 @@ public class ListaService {
                                     ? pageable.getPageSize()
                                     : 10,
                             pageable.getSort()
-                    ), username
+                    ), result.get()
             );
         } catch (Exception e) {
             logger.error("Error al buscar todas las listas del usuario\n" + e.getMessage());

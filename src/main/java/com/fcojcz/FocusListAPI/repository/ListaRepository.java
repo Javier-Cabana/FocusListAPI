@@ -2,6 +2,7 @@ package com.fcojcz.FocusListAPI.repository;
 
 import com.fcojcz.FocusListAPI.model.entity.Lista;
 
+import com.fcojcz.FocusListAPI.model.entity.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,11 +16,11 @@ public interface ListaRepository extends JpaRepository<Lista, UUID> {
 
     /**
      * Devuelve todas las listas creadas por un usuario específico.
-     * @param username Usuario propietario de las listas.
+     * @param usuario Usuario propietario de las listas.
      * @param pageable Información de paginación
      * @return Página con todas las listas del usuario.
      */
-    Page<Lista> findAllByUsuario(Pageable pageable, String username);
+    Page<Lista> findAllByUsuario(Pageable pageable, Usuario usuario);
 
     /**
      * Encontrar una lista por su nombre
