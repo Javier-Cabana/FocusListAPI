@@ -3,8 +3,8 @@ package com.fcojcz.FocusListAPI.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,7 +13,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @EqualsAndHashCode
 @Entity
 @Table(name = "listas")
@@ -28,7 +27,7 @@ public class Lista {
     private String nombre;
 
     @Column(name = "fecha_creacion", nullable = false)
-    private Date fechaCreacion;
+    private LocalDate fechaCreacion;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
