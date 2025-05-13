@@ -40,10 +40,9 @@ public class ListaService {
                 throw new RuntimeException("Ya existe una lista con el nombre: " + listaCreateDTO.getNombre());
             }
             logger.info("Creando la lista a partir del DTO: {}", listaCreateDTO.getNombre());
-            LocalDate fechaCreacion = LocalDate.now();
             Lista lista = Lista.builder()
                     .nombre(listaCreateDTO.getNombre())
-                    .fechaCreacion(fechaCreacion)
+                    .fechaCreacion(LocalDate.now())
                     .usuario(usuario)
                     .build();
             logger.info("Guardando la lista: {}", listaCreateDTO.getNombre());

@@ -28,10 +28,10 @@ public class Tarea {
     private String descripcion;
 
     @Column(name = "completada")
-    private Boolean completada = false;
+    private Boolean completada;
 
     @Column(name = "fecha_creacion", nullable = false)
-    private LocalDateTime fechaCreacion = LocalDateTime.now();
+    private LocalDateTime fechaCreacion;
 
     @Column(name = "fecha_vencimiento")
     private LocalDateTime fechaVencimiento;

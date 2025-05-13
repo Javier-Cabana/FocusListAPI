@@ -2,6 +2,9 @@ package com.fcojcz.FocusListAPI.repository;
 
 import com.fcojcz.FocusListAPI.model.entity.Tarea;
 import com.fcojcz.FocusListAPI.model.entity.Lista;
+import com.fcojcz.FocusListAPI.model.entity.Usuario;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,21 +16,6 @@ import java.util.UUID;
 public interface TareaRepository extends JpaRepository<Tarea, UUID> {
 
     /**
-     * Devuelve todas las tareas de una lista específica.
-     * @param lista Lista a la que pertenecen las tareas.
-     * @return Lista de tareas asociadas a esa lista.
-     */
-    List<Tarea> findByLista(Lista lista);
-
-    /**
-     * Devuelve todas las tareas completadas o no completadas de una lista específica.
-     * @param lista Lista asociada.
-     * @param completada Estado de la tarea (true o false).
-     * @return Lista de tareas según su estado de completado.
-     */
-    List<Tarea> findByListaAndCompletada(Lista lista, boolean completada);
-
-    /**
      * Busca una tarea por su ID y lista asociada, útil para validación y seguridad.
      * @param id UUID de la tarea.
      * @param lista Lista a la que debe pertenecer la tarea.
@@ -36,17 +24,18 @@ public interface TareaRepository extends JpaRepository<Tarea, UUID> {
     Optional<Tarea> findByIdAndLista(UUID id, Lista lista);
 
     /**
+    * Devuelve todas las tareas contenidas en una lista.
+    * @param lista Lista propietaria de las tareas.
+    * @param pageable Información de paginación
+    * @return Página con todas las tareas de la lista.
+    */
+    Page<Tarea> findAllByLista(Pageable pageable, Lista lista);
+
+    /**
      * Verifica si existe una tarea con un título específico dentro de una lista.
      * @param titulo Título de la tarea.
      * @param lista Lista en la que se busca la tarea.
      * @return true si existe, false en caso contrario.
      */
     boolean existsByTituloAndLista(String titulo, Lista lista);
-
-    /**
-     * Elimina una tarea por su ID y su lista asociada (opcional para mayor seguridad).
-     * @param id UUID de la tarea.
-     * @param lista Lista a la que pertenece la tarea.
-     */
-    void deleteByIdAndLista(UUID id, Lista lista);
 }
