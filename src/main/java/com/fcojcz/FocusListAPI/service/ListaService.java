@@ -1,9 +1,6 @@
 package com.fcojcz.FocusListAPI.service;
 
-import com.fcojcz.FocusListAPI.model.dto.lista.ListaCreateDTO;
-import com.fcojcz.FocusListAPI.model.dto.lista.ListaDeleteDTO;
-import com.fcojcz.FocusListAPI.model.dto.lista.ListaResponseDTO;
-import com.fcojcz.FocusListAPI.model.dto.lista.ListaUpdateDTO;
+import com.fcojcz.FocusListAPI.model.dto.lista.*;
 import com.fcojcz.FocusListAPI.model.entity.Lista;
 import com.fcojcz.FocusListAPI.model.entity.Tarea;
 import com.fcojcz.FocusListAPI.model.entity.Usuario;
@@ -36,7 +33,9 @@ public class ListaService {
 
     public Lista save(ListaCreateDTO listaCreateDTO) {
         try {
-            if (listaRepository.existsByNombre(listaCreateDTO.getNombre())) {
+            Usuario usuario = usuarioRepository.findById(listaCreateDTO.getIdUsuario()).orElse(null);
+
+            if (listaRepository.existsByNombreAndUsuario(listaCreateDTO.getNombre(), usuario)) {
                 logger.error("Ya existe una lista con el nombre: {}", listaCreateDTO.getNombre());
                 throw new RuntimeException("Ya existe una lista con el nombre: " + listaCreateDTO.getNombre());
             }
@@ -45,7 +44,7 @@ public class ListaService {
             Lista lista = Lista.builder()
                     .nombre(listaCreateDTO.getNombre())
                     .fechaCreacion(fechaCreacion)
-                    .usuario(usuarioRepository.findById(listaCreateDTO.getIdUsuario()).get())
+                    .usuario(usuario)
                     .build();
             logger.info("Guardando la lista: {}", listaCreateDTO.getNombre());
             return listaRepository.save(lista);
@@ -61,9 +60,13 @@ public class ListaService {
             logger.info("Buscando lista a actualizar con ID: {}", listaUpdateDTO.getId());
             Lista listaToUpdate = listaRepository.findById(listaUpdateDTO.getId()).orElse(null);
 
-            if (listaToUpdate != null) {
-                listaToUpdate.setNombre(listaUpdateDTO.getNombre());
+            if (listaRepository.existsByNombreAndUsuario(listaUpdateDTO.getNombre(),
+                    usuarioRepository.findById(listaUpdateDTO.getIdUsuario()).orElse(null))) {
+                logger.error("Ya existe una lista con el nombre: {}", listaUpdateDTO.getNombre());
+                throw new RuntimeException("Ya existe una lista con el nombre: " + listaUpdateDTO.getNombre());
             }
+
+            listaToUpdate.setNombre(listaUpdateDTO.getNombre());
 
             logger.info("Actualizando la lista con ID: {}", listaUpdateDTO.getId());
             return listaRepository.save(listaToUpdate);
@@ -119,27 +122,20 @@ public class ListaService {
         }
     }
 
-    public Lista loadByName(String nombre) {
+    public Lista loadByNameAndUsuario(ListaGetDTO listaGetDTO) {
         try {
-            Lista result = listaRepository.findByNombre(nombre).orElse(null);
+            logger.info("Buscando la lista con el nombre: {}", listaGetDTO.getNombre());
 
-            if (result == null) {
-                logger.error("No se ha encontrado la lista con el nombre: {}", nombre);
+            Optional<Lista> result = listaRepository.findByNombreAndUsuario(listaGetDTO.getNombre(),
+                    usuarioRepository.findById(listaGetDTO.getIdUsuario()).orElse(null));
+
+            if (result.isEmpty()) {
+                logger.error("No se ha encontrado la lista con el nombre: {}", listaGetDTO.getNombre());
+                throw new RuntimeException("No se ha encontrado la lista con el nombre: " + listaGetDTO.getNombre());
             } else {
-                logger.info("Buscando la lista con el nombre: {}", nombre);
+                return result.get();
             }
 
-            return result;
-        } catch (Exception e) {
-            logger.error("Error al buscar la lista con el nombre: {}", e.getMessage());
-            throw new RuntimeException("Error al buscar la lista por nombre: " + e.getMessage());
-        }
-    }
-
-    public boolean existsByNombre(String nombre) {
-        try {
-            logger.info("Buscando la lista con el nombre: {}", nombre);
-            return listaRepository.existsByNombre(nombre);
         } catch (Exception e) {
             logger.error("Error al buscar la lista con el nombre: {}", e.getMessage());
             throw new RuntimeException("Error al buscar la lista por nombre: " + e.getMessage());

@@ -1,9 +1,6 @@
 package com.fcojcz.FocusListAPI.controller;
 
-import com.fcojcz.FocusListAPI.model.dto.lista.ListaCreateDTO;
-import com.fcojcz.FocusListAPI.model.dto.lista.ListaDeleteDTO;
-import com.fcojcz.FocusListAPI.model.dto.lista.ListaResponseDTO;
-import com.fcojcz.FocusListAPI.model.dto.lista.ListaUpdateDTO;
+import com.fcojcz.FocusListAPI.model.dto.lista.*;
 import com.fcojcz.FocusListAPI.model.entity.Lista;
 import com.fcojcz.FocusListAPI.service.ListaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +36,9 @@ public class ListaController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{name}")
-    public ResponseEntity<ListaResponseDTO> getListaByName(@PathVariable("name") String name) {
-        Lista lista = listaService.loadByName(name);
+    @GetMapping("")
+    public ResponseEntity<ListaResponseDTO> getListaByName(@RequestBody ListaGetDTO listaGetDTO) {
+        Lista lista = listaService.loadByNameAndUsuario(listaGetDTO);
 
         if (lista == null) return ResponseEntity.badRequest().build();
 

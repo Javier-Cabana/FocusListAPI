@@ -27,12 +27,12 @@ public interface ListaRepository extends JpaRepository<Lista, UUID> {
      * @param nombre Nombre de la lista
      * @return Devuelve la lista si la encuentra, sino devuelve vacío.
      */
-    Optional<Lista> findByNombre(String nombre);
+    Optional<Lista> findByNombreAndUsuario(String nombre, Usuario usuario);
 
     /**
      * Comprueba si existe una lista con ese nombre
      * @param nombre Nombre de la lista
      * @return Devuelve true si la lista existe, sino devuelve false
      */
-    boolean existsByNombre(String nombre);
+    boolean existsByNombreAndUsuario(String nombre, Usuario usuario);
 }
