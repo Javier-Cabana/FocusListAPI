@@ -4,8 +4,10 @@ import com.fcojcz.FocusListAPI.model.dto.tarea.TareaCreateDTO;
 import com.fcojcz.FocusListAPI.model.dto.tarea.TareaDeleteDTO;
 import com.fcojcz.FocusListAPI.model.dto.tarea.TareaResponseDTO;
 import com.fcojcz.FocusListAPI.model.dto.tarea.TareaUpdateDTO;
+import com.fcojcz.FocusListAPI.model.entity.Etiqueta;
 import com.fcojcz.FocusListAPI.model.entity.Lista;
 import com.fcojcz.FocusListAPI.model.entity.Tarea;
+import com.fcojcz.FocusListAPI.repository.EtiquetaRepository;
 import com.fcojcz.FocusListAPI.repository.ListaRepository;
 import com.fcojcz.FocusListAPI.repository.TareaRepository;
 import org.slf4j.Logger;
@@ -30,6 +32,9 @@ public class TareaService {
     @Autowired
     ListaRepository listaRepository;
 
+    @Autowired
+    private EtiquetaRepository etiquetaRepository;
+
     private static final Logger logger = LoggerFactory.getLogger(TareaService.class);
 
     public Tarea save(TareaCreateDTO tareaCreateDTO) {
@@ -40,6 +45,11 @@ public class TareaService {
                 logger.error("No se ha encontrado la lista con ID: {}", tareaCreateDTO.getIdLista());
                 throw new RuntimeException("No se ha encontrado la lista con ID: " + tareaCreateDTO.getIdLista());
             }
+
+            Etiqueta etiqueta = (tareaCreateDTO.getIdEtiqueta() != null)
+                    ? etiquetaRepository.findById(tareaCreateDTO.getIdEtiqueta()).orElse(null)
+                    : null;
+
             logger.info("Creando la tarea a partir del DTO: {}", tareaCreateDTO.getTitulo());
             Tarea tarea = Tarea.builder()
                     .titulo(tareaCreateDTO.getTitulo())
@@ -48,8 +58,8 @@ public class TareaService {
                     .fechaCreacion(LocalDateTime.now())
                     .fechaVencimiento(tareaCreateDTO.getFechaVencimiento())
                     .lista(lista)
-                    .etiqueta(null) //TODO: Crear en el servicio/repositorio de etiqueta un metodo para referenciar una etiqueta de la BBDD
-                    .build();       //TODO quedaría algo tal que así .etiqueta(etiquetaRepository.findById(tareaCreateDTO.getIdEtiqueta()).orElse(null))
+                    .etiqueta(etiqueta)
+                    .build();
             logger.info("Guardando la tarea: {}", tareaCreateDTO.getTitulo());
             return tareaRepository.save(tarea);
         } catch (RuntimeException e) {
@@ -63,11 +73,22 @@ public class TareaService {
             logger.info("Buscando la tarea a actualizar con ID: '{}'", tareaUpdateDTO.getId());
             Tarea tareaToUpdate = tareaRepository.findById(tareaUpdateDTO.getId()).orElse(null);
 
+            if (tareaToUpdate == null) {
+                logger.error("No se ha encontrado la tarea con ID: {}", tareaUpdateDTO.getId());
+                throw new RuntimeException("Tarea no encontrada");
+            }
+
             tareaToUpdate.setTitulo(tareaUpdateDTO.getTitulo());
             tareaToUpdate.setDescripcion(tareaUpdateDTO.getDescripcion());
             tareaToUpdate.setCompletada(tareaUpdateDTO.getCompletada());
             tareaToUpdate.setFechaVencimiento(tareaUpdateDTO.getFechaVencimiento());
-            tareaToUpdate.setEtiqueta(null); //TODO: Crear metodo para referenciar una etiqueta de la BBDD
+
+            Etiqueta etiqueta = null;
+            if (tareaUpdateDTO.getIdEtiqueta() != null) {
+                etiqueta = etiquetaRepository.findById(tareaUpdateDTO.getIdEtiqueta()).orElse(null);
+            }
+
+            tareaToUpdate.setEtiqueta(etiqueta);
 
             logger.info("Actualizando la tarea: {}", tareaToUpdate);
             return tareaRepository.save(tareaToUpdate);
@@ -143,6 +164,8 @@ public class TareaService {
         try {
             logger.info("Mapeando la tarea con id: {}", tarea.getId());
 
+            UUID idEtiqueta = (tarea.getEtiqueta() != null) ? tarea.getEtiqueta().getId_etiqueta() : null;
+
             return TareaResponseDTO.builder()
                     .id(tarea.getId())
                     .titulo(tarea.getTitulo())
@@ -151,7 +174,7 @@ public class TareaService {
                     .fechaCreacion(tarea.getFechaCreacion())
                     .fechaVencimiento(tarea.getFechaVencimiento())
                     .idLista(tarea.getLista().getId())
-                    .idEtiqueta(tarea.getEtiqueta().getId_etiqueta())
+                    .idEtiqueta(idEtiqueta)
                     .build();
         } catch (Exception e) {
             logger.error("Error al mapear la tarea: {}", e.getMessage());

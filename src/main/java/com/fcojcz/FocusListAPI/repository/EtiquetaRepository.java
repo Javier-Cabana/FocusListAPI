@@ -12,5 +12,5 @@ import java.util.UUID;
 public interface EtiquetaRepository extends JpaRepository<Etiqueta, UUID> {
     boolean existsByPrioridad(PrioridadEtiqueta prioridad);
 
-    Optional<Etiqueta> findByPrioridad(PrioridadEtiqueta prioridad);
+    Optional<Etiqueta> findById(UUID id);
 }

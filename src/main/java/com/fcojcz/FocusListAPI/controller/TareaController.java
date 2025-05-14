@@ -26,11 +26,11 @@ public class TareaController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<Page<TareaResponseDTO>> getAllTareas(Pageable pageable, @RequestBody TareaGetDTO tareaGetDTO) {
+    @PostMapping("/all")
+    public ResponseEntity<Page<TareaResponseDTO>> getAllTareas( @RequestBody TareaGetDTO tareaGetDTO, Pageable pageable) {
         Page<Tarea> tareas = tareaService.loadAllByLista(pageable, tareaGetDTO.getIdLista());
 
-        if (tareas == null) return ResponseEntity.badRequest().build();
+        if (tareas == null || tareas.isEmpty()) return ResponseEntity.noContent().build();
 
         Page<TareaResponseDTO> response = tareas.map(tarea -> tareaService.mapToTareaResponseDTO(tarea));
         return ResponseEntity.ok(response);
