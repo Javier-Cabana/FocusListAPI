@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +18,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableMethodSecurity
@@ -55,6 +63,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .cors(withDefaults())
+
             .csrf(AbstractHttpConfigurer::disable)
 
             .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
@@ -79,5 +89,27 @@ public class SecurityConfig {
 
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+    /**
+     *  Bean que define la configuración de CORS para toda la API.
+     */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        var config = new CorsConfiguration();
+        // Origen(es) permitidos
+        config.setAllowedOrigins(List.of("http://localhost:8100"));
+        // Métodos permitidos en peticiones CORS
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        // Cabeceras que puede enviar el cliente
+        config.setAllowedHeaders(List.of("*"));
+        // Permitir envío de cookies / Authorization
+        config.setAllowCredentials(true);
+        // Exponer cabeceras (por ejemplo, Authorization) a la respuesta
+        config.setExposedHeaders(List.of("Authorization"));
+
+        var source = new UrlBasedCorsConfigurationSource();
+        // Aplica esta configuración a todos los endpoints
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }
