@@ -12,9 +12,12 @@ import java.io.IOException;
 @Component
 public class ResAuthEntryPoint implements AuthenticationEntryPoint {
     @Override
-    public void commence(HttpServletRequest request,
-                         HttpServletResponse response,
-                         AuthenticationException authException) throws IOException, ServletException {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No estás autorizado");
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
+            throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setHeader("Access-Control-Allow-Origin", "https://focuslist-ruddy.vercel.app");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setContentType("application/json");
+        response.getWriter().write("{\"error\": \"Unauthorized\"}");
     }
 }
