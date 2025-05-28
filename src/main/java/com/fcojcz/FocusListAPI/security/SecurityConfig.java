@@ -64,7 +64,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(Customizer.withDefaults())
+            .cors(withDefaults())
 
             .csrf(AbstractHttpConfigurer::disable)
 
@@ -107,7 +107,7 @@ public class SecurityConfig {
         // Permitir envío de cookies / Authorization
         config.setAllowCredentials(true);
         // Exponer cabeceras (por ejemplo, Authorization) a la respuesta
-        config.setExposedHeaders(List.of("Authorization"));
+        config.setExposedHeaders(List.of("Authorization","Content-Type"));
 
         var source = new UrlBasedCorsConfigurationSource();
         // Aplica esta configuración a todos los endpoints
