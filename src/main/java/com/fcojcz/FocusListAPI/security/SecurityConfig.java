@@ -97,7 +97,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         var config = new CorsConfiguration();
         // Origen(es) permitidos
-        config.setAllowedOrigins(List.of("http://localhost:8100"));
+        config.setAllowedOrigins(List.of("https://focuslist-ruddy.vercel.app"));
         // Métodos permitidos en peticiones CORS
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         // Cabeceras que puede enviar el cliente
